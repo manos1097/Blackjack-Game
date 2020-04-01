@@ -137,7 +137,6 @@ def askReplay():
         elif answer.lower() == 'n':
             return False
 
-
 while True:
 
     print('\nWelcome to Blackjack game')
