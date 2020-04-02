@@ -14,8 +14,6 @@ If a hand's value exceeds 21 the player who has the hand "Busts" and losses and 
 
 If a hand's value is lower than 21 then the dealer starts hitting cards until it's hand exceeds the number 17. 
 
-Then the program checks if the dealer busts or wins
-
 The player starts with 2 cards on his hand.
 
 The player has a decision to make. To hit or pass
