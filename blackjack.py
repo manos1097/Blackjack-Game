@@ -53,6 +53,7 @@ class Hand:
     def __init__(self):
         self.cards = []
         self.value = 0
+        self.aces = 0
 
     def addCard(self, card):
         self.cards.append(card)
@@ -64,13 +65,23 @@ class Hand:
             text += str(card) + '\n'
         return text
 
+    def calculateAces(self):
+        pairs = self.aces / 2
+        if pairs > 0:
+            handValueWithAcces = self.value - pairs * 2 + pairs * 11
+            if handValueWithAcces <= 21:
+                return handValueWithAcces
+            else:
+                return self.value
+        else:
+            return self.value
+
 def show_some(dealer_hand, player_hand):
     print("\nDealer's hand:")
     print('<hidden card>')
     print(dealer_hand.cards[1])
     print("\nPlayer's hand:")
-    print(player_hand.cards[0])
-    print(player_hand.cards[1])
+    print(*player_hand.cards, sep='\n')
     print('')
 
 def show_all(dealer_hand, player_hand):
@@ -163,25 +174,32 @@ while True:
 
     while askHitOrPass():
         player_hand.addCard(deck.drawCard())
-        print(player_hand)
-        if player_hand.value == 21:
+        if player_hand.calculateAces() == 21:
+            show_all(dealer_hand, player_hand)
             playerWins(player_chips)
             break
-        elif player_hand.value > 21:
+        elif player_hand.calculateAces() > 21:
+            show_all(dealer_hand, player_hand)
             playerBusts(player_chips)
             break
+        else:
+            show_some(dealer_hand, player_hand)
 
     while dealer_hand.value < 17 and playing:
         dealer_hand.addCard(deck.drawCard())
 
     while playing:
-        if dealer_hand.value == 21:
+        if dealer_hand.calculateAces() == 21:
+            show_all(dealer_hand, player_hand)
             dealerWins(player_chips)
         elif dealer_hand.value > 21:
+            show_all(dealer_hand, player_hand)
             dealerBusts(player_chips)
-        elif dealer_hand.value < 21 and (dealer_hand.value > player_hand.value):
+        elif dealer_hand.calculateAces() < 21 and (dealer_hand.calculateAces() > player_hand.calculateAces()):
+            show_all(dealer_hand, player_hand)
             dealerWins(player_chips)
-        elif dealer_hand.value < 21 and (dealer_hand.value < player_hand.value):
+        elif dealer_hand.calculateAces() < 21 and (dealer_hand.calculateAces() < player_hand.calculateAces()):
+            show_all(dealer_hand, player_hand)
             playerWins(player_chips)
 
     print(f'Player winnings: {player_chips.chips}')
